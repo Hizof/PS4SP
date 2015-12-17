@@ -38,11 +38,10 @@ function AddWebPartNode($webPart, $wpm, $webPartsNode)
     Write-Host "Добавление WebPart" -BackgroundColor Cyan
     [System.XML.XMLElement]$webPartNode=$webPartsNode.appendChild($oXMLDocument.CreateElement("webpart"))
     $webPartNode.SetAttribute("TypeName", $webPart.GetType().Name)
-    $webPartNode.SetAttribute("filter", $webPart.FilterName)
     $webPartNode.SetAttribute("ZoneID", $wpm.GetZoneID($webPart))
     $webPartNode.SetAttribute("TabIndex", $webPart.TabIndex)
     $webPartNode.SetAttribute("ZoneIndex", $webPart.ZoneIndex)
-    $webPartNode.SetAttribute("FileName", ($webPart.GetType().Name + "--" + $webPart.FilterName + ".xml"))
+    $webPartNode.SetAttribute("FileName", ($webPart.GetType().Name + "_" + $wpm.GetZoneID($webPart) + "_" + $webPart.ZoneIndex + ".xml"))
 
     return $webPartNode
 }
