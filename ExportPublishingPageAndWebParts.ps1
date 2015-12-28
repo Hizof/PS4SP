@@ -130,6 +130,8 @@ function ExportPage($web, $page, $pagesNode)
         $pagesNode.RemoveChild($pageNode)
         Write-Host ("Страница " + $page.Url + " была исключена из экспорта из отсутствия веб частей для экспорта") -BackgroundColor DarkYellow
     }
+    
+    $wpm.Web.Dispose();
 
     return $successExportWebPart;
 }
