@@ -53,11 +53,10 @@ Function Deploy-SPSolution ($WspFolderPath)
         else
         {
             write-host "solution already exists"
-
         }
-
     }
 }
+
 try
 {
         Deploy-SPSolution "C:\EXPORTEDWSP"
