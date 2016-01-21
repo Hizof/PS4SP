@@ -62,6 +62,10 @@ try
 {
         Deploy-SPSolution "C:\EXPORTEDWSP"
 }
+catch
+{
+    write-host $_.exception
+}
 
 #Deploy all solutions to specific site
 #https://gallery.technet.microsoft.com/scriptcenter/Automated-Farm-level-4bc150ce
@@ -86,10 +90,4 @@ foreach ($solution in $solutions) {
 			} 
 		} 
 	} 
-}
-
-catch
-{
-    write-host $_.exception
-
 }
