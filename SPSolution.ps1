@@ -90,3 +90,26 @@ foreach ($solution in $solutions) {
 		} 
 	} 
 }
+
+#Update all solution from folder
+Add-PSSnapin microsoft.sharepoint.powershell
+
+$sols = Get-SPSolution
+
+$sols | %{
+    $solutionPath = (Get-Location).Path + "\" + $_.Name
+    $isNeedUpdateWSP = Test-Path ($solutionPath)
+    if($isNeedUpdateWSP)
+    {
+        if($_.ContainsGlobalAssembly)
+        {
+            Write-Host $solutionPath -ForegroundColor Green
+            Update-SPSolution -Identity $_.Name -LiteralPath $solutionPath -GACDeployment
+        }
+        else
+        {
+            Write-Host $solutionPath -ForegroundColor Yellow
+            Update-SPSolution -Identity $_.Name -LiteralPath $solutionPath
+        }
+    }
+}
