@@ -35,7 +35,7 @@ function Clear-SPListBatch($list, $rowLimit = 500, $camlQuery = "")
 
         # http://www.theodells.org/theodells/blog/2012/10/powershell-function-to-delete-all-sharepoint-list-items/
         [System.Text.StringBuilder]$batchXml = New-Object "System.Text.StringBuilder"; 
-        $batchXml.Append("<?xml version=`"1.0`" encoding=`"UTF-8`"?><Batch>")
+        $batchXml.Append("<?xml version=`"1.0`" encoding=`"UTF-8`"?><Batch>")|Out-Null
         $cmd = "<Method><SetList Scope=`"Request`">" + $list.ID + "</SetList><SetVar Name=`"ID`">{0}</SetVar><SetVar Name=`"Cmd`">Delete</SetVar></Method>"
         
         for($intIndex = $count; $intIndex -ge 0; $intIndex--)
@@ -43,11 +43,11 @@ function Clear-SPListBatch($list, $rowLimit = 500, $camlQuery = "")
             if($items[$intIndex] -ne $null)
             {
                 $batchString = [System.String]::Format($cmd, $items[$intIndex].ID.ToString())
-                $batchXml.Append($batchString)
+                $batchXml.Append($batchString)|Out-Null
             }
         }
         
-        $batchXml.Append("</Batch>");
+        $batchXml.Append("</Batch>")|Out-Null
         $web.ProcessBatchData($batchXml.ToString())|Out-Null
     }
     while($query.ListItemCollectionPosition -ne $null)
