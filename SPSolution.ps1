@@ -1,24 +1,30 @@
-#Download all wsp from farm
+#Export all wsp from farm
+function Export-SPSolution($dirName)
+{
+    if($dirName -eq $null)
+    {
+        $dirName = Get-Location
+    }
+    
+    Write-Host Exporting solutions to $dirName  
 
-$dirName = "<directory path>" 
-Write-Host Exporting solutions to $dirName  
-
-foreach ($solution in Get-SPSolution)  
-{  
-    $id = $Solution.SolutionID  
-    $title = $Solution.Name  
-    $filename = $Solution.SolutionFile.Name 
-
-    Write-Host "Exporting ‘$title’ to …\$filename" -nonewline  
-
-    try {  
-        $solution.SolutionFile.SaveAs("$dirName\$filename")  
-        Write-Host " – done" -foreground green  
-    }  
-    catch  
+    foreach ($solution in Get-SPSolution)  
     {  
-        Write-Host " – error : $_" -foreground red  
-    }  
+        $id = $Solution.SolutionID  
+        $title = $Solution.Name  
+        $filename = $Solution.SolutionFile.Name 
+
+        Write-Host "Exporting ‘$title’ to …\$filename" -nonewline  
+
+        try {  
+            $solution.SolutionFile.SaveAs("$dirName\$filename")  
+            Write-Host " – done" -foreground green  
+        }  
+        catch  
+        {  
+            Write-Host " – error : $_" -foreground red  
+        }  
+    }
 }
 
 #Add multiple farm solutions using power shell (Not Deploy)
