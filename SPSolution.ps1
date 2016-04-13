@@ -44,7 +44,7 @@ function WaitForInsallation([string] $Name)
         }
         Write-Host "job ended" -ForegroundColor green
 }
-Function Deploy-SPSolution ($WspFolderPath)
+Function Deploy-SPSolutions ($WspFolderPath)
 {
     $wspFiles = get-childitem $WspFolderPath | where {$_.Name -like "*.wsp"}
 
@@ -72,29 +72,32 @@ catch
     write-host $_.exception
 }
 
-#Deploy all solutions to specific site
-#https://gallery.technet.microsoft.com/scriptcenter/Automated-Farm-level-4bc150ce
-$webAppUrl = "http://site"
-$solutions = Get-SPSolution
-foreach ($solution in $solutions) {
-	$solutionId = $solution.Id 
-	if ($solution -ne $null) 
-	{ 
-		$solutionDeployed = Get-SPSolution -Identity $solutionId | where-object {$_.Deployed -eq "False"} 
-		if ($solutionDeployed -eq $null)  
+function Install-SPSolutionsAll($webAppUrl)
+{
+	#Deploy all solutions to specific site
+	#https://gallery.technet.microsoft.com/scriptcenter/Automated-Farm-level-4bc150ce
+	#$webAppUrl = "http://site"
+	$solutions = Get-SPSolution
+	foreach ($solution in $solutions) {
+		$solutionId = $solution.Id 
+		if ($solution -ne $null) 
 		{ 
-			if ( $solution.ContainsWebApplicationResource )  
+			$solutionDeployed = Get-SPSolution -Identity $solutionId | where-object {$_.Deployed -eq "False"} 
+			if ($solutionDeployed -eq $null)  
 			{ 
-				Write-Host "Deploying solution package to web application: " $webAppUrl -foregroundcolor Yellow 
-				Install-SPSolution -Identity $solution.Name -WebApplication $webAppUrl -GACDeployment -Confirm:$false 
-			} 
-			else 
-			{ 
-				Write-Host "Deploying solution package to all web applications" -foregroundcolor Yellow 
-				Install-SPSolution -Identity $solution.Name -GACDeployment -Confirm:$false 
+				if ( $solution.ContainsWebApplicationResource )  
+				{ 
+					Write-Host "Deploying solution package to web application: " $webAppUrl -foregroundcolor Yellow 
+					Install-SPSolution -Identity $solution.Name -WebApplication $webAppUrl -GACDeployment -Confirm:$false 
+				} 
+				else 
+				{ 
+					Write-Host "Deploying solution package to all web applications" -foregroundcolor Yellow 
+					Install-SPSolution -Identity $solution.Name -GACDeployment -Confirm:$false 
+				} 
 			} 
 		} 
-	} 
+	}
 }
 
 #Update all solution from folder
