@@ -50,12 +50,13 @@ function AddListItemPropertiesNode($listItemNode)
     return $ListItemPropertiesNode
 }
 
-function AddListItemPropertyNode($listItemProperty, $ListItemPropertiesNode)
+function AddListItemPropertyNode($listItemPropertyName, $listItemPropertyValue, $ListItemPropertiesNode)
 {
     Write-Host "Добавление listItemProperty" -BackgroundColor Cyan
     [System.XML.XMLElement]$listItemPropertyNode=$ListItemPropertiesNode.appendChild($oXMLDocument.CreateElement("ListItemProperty"))
 
-    $listItemPropertyNode.SetAttribute($listItemProperty.Name, $listItemProperty.Value)
+    $listItemPropertyNode.SetAttribute("Name", $listItemPropertyName)
+    $listItemPropertyNode.SetAttribute("Value", $listItemPropertyValue)
 }
 
 function ExportSPListItem($listItem, $listItemsNode)
@@ -67,9 +68,8 @@ function ExportSPListItem($listItem, $listItemsNode)
     $listItemProperiesNode = AddListItemPropertiesNode $listItemNode
     if($listItem.Properties.Count -gt 0)
     {
-        $listItem.Properties | %{
-          #write-host $_.Name $_.Value "====" -BackgroundColor Red
-          AddListItemPropertyNode $_ $listItemProperiesNode
+        $listItem.Properties.Keys | %{
+          AddListItemPropertyNode $_ $listItem.Properties[$_] $listItemProperiesNode
         }
     } 
 }
